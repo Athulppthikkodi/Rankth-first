@@ -8,6 +8,10 @@ import Grid from "@/components/Layout/Grid/Grid";
 import Box from "@/components/Layout/Box/Box";
 import Stack from "@/components/Layout/Stack/Stack";
 import Container from "@/components/Layout/Container/Container";
+import Input from "@/components/Inputs/Input/Input";
+import Checkbox from "@/components/Inputs/Checkbox/Checkbox";
+import Radio from "@/components/Inputs/Radio/Radio";
+import RadioGroup from "@/components/Inputs/RadioGroup/RadioGroup";
 export default function Home() {
   return (
     <div>
@@ -127,6 +131,18 @@ export default function Home() {
           boxShadow="0px 4px 10px rgba(0, 0, 0, 0.1)"
         >
           This is a custom Box1!
+          <Checkbox label="Checkbox" />
+          <RadioGroup
+            name="exampleGroup"
+            // value={selectedValue}
+            onChange={(e)=>console.log(e.target.value)}
+            direction="row"
+          >
+            <Radio value="option1" label="Option 1" />
+            <Radio value="option2" label="Option 2" />
+            <Radio value="option4" label="Option 4" />
+            <Radio value="option3" label="Option 3" disabled />
+          </RadioGroup>
         </Box>
         <Box
           component="section"
@@ -174,6 +190,7 @@ export default function Home() {
           </Box>
         </Container>
       </Stack>
+      <Input fullWidth placeholder="Success" success statusText="Success" />
     </div>
   );
 }
