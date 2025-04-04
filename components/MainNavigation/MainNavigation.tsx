@@ -4,12 +4,12 @@ import Link from "next/link";
 import Box from "../Layout/Box/Box";
 import Container from "../Layout/Container/Container";
 import { usePathname } from 'next/navigation';
+import Image from "next/image";
 
 // Types
 interface NavItemProps {
   label: string;
   to: string; // Path to navigate to
-  active?: boolean;
 }
 
 interface MainNavigationProps {
@@ -144,7 +144,6 @@ const AvatarPlaceholder = styled.div`
 const NavItem: React.FC<NavItemProps> = ({
   label,
   to,
-  active = false,
 }) => {
   const pathname = usePathname();
   const isActive = pathname === to;
@@ -200,7 +199,7 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
           <RightSection>
             <Avatar onClick={onAvatarClick}>
               {avatarSrc ? (
-                <img src={avatarSrc} alt="User Avatar" />
+                <Image src={avatarSrc} alt="User Avatar" width={29} height={29} style={{ objectFit: 'cover' }} />
               ) : (
                 <AvatarPlaceholder>J</AvatarPlaceholder>
               )}

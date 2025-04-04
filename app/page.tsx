@@ -1,5 +1,5 @@
 "use client";
-import React, { act } from "react";
+import React from "react";
 import MainNavigation from "@/components/MainNavigation/MainNavigation";
 import Box from "@/components/Layout/Box/Box";
 import Container from "@/components/Layout/Container/Container";
