@@ -137,7 +137,7 @@ function handleNavigate(): void {
                 </Typography>
                 <Typography>
                   Get started with managing your personal SEO projects and track
-                  your website's performance.
+                  your website&apos;s performance.
                 </Typography>
                 <Box sx={{ marginTop: "24px" }}>
                   <Button onClick={handleNavigate} variant="contained">

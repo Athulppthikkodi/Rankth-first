@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import Grid, { GridProps } from './Grid';
+import Grid from './Grid';
 import Box from '../Box/Box';
 
 const meta = {

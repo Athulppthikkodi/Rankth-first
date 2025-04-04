@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React from "react";
 import { css, CSSObject } from "@emotion/react";
+import Image from "next/image";
 
 type AvatarProps = {
   src?: { src: string };
@@ -37,21 +38,20 @@ const Avatar: React.FC<AvatarProps> = ({
     color: #fff;
     background-color: #e4e4e7;
     overflow: hidden;
-    ${variant === "circular" && "border-radius: 50%;"}
-    ${variant === "rounded" && "border-radius: 12px;"}
-    ${variant === "square" && "border-radius: 4px;"}
+    ${variant === "circular" && "border-radius: 50%;"};
+    ${variant === "rounded" && "border-radius: 12px;"};
+    ${variant === "square" && "border-radius: 4px;"};
     ${sx && css(sx)};
   `;
 
   return (
     <div css={avatarStyles} {...props}>
       {src ? (
-        <img
+        <Image
           src={src.src}
           alt={alt || "Avatar"}
+          fill
           css={css`
-            width: 100%;
-            height: 100%;
             object-fit: cover;
           `}
         />

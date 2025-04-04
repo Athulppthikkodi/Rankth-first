@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Meta, StoryObj } from '@storybook/react';
-import { Switch } from './Switch';
+import Switch, { SwitchProps } from './Switch';
 
 const meta: Meta<typeof Switch> = {
   title: 'Rankth/Inputs/Switch',
@@ -97,22 +97,24 @@ export const DisabledChecked: Story = {
 };
 
 // Interactive example
+const InteractiveSwitch: React.FC<SwitchProps> = (args) => {
+  const [isChecked, setIsChecked] = useState(false);
+  
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsChecked(event.target.checked);
+    args.onChange?.(event);
+  };
+  
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
+      <Switch {...args} checked={isChecked} onChange={handleChange} />
+      <p>Switch is {isChecked ? 'ON' : 'OFF'}</p>
+    </div>
+  );
+};
+
 export const Interactive: Story = {
-  render: (args:any) => {
-    const [isChecked, setIsChecked] = useState(false);
-    
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setIsChecked(event.target.checked);
-      args.onChange?.(event);
-    };
-    
-    return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
-        <Switch {...args} checked={isChecked} onChange={handleChange} />
-        <p>Switch is {isChecked ? 'ON' : 'OFF'}</p>
-      </div>
-    );
-  },
+  render: (args) => <InteractiveSwitch {...args} />,
 };
 
 // Custom styling
@@ -132,36 +134,44 @@ export const CustomStyling: Story = {
 };
 
 // A group of switches 
-export const SwitchGroup: Story = {
-  render: () => {
-    const [states, setStates] = useState({
-      switch1: true,
-      switch2: false,
-      switch3: true,
+interface SwitchStates {
+  switch1: boolean;
+  switch2: boolean;
+  switch3: boolean;
+}
+
+const SwitchGroupComponent: React.FC = () => {
+  const [states, setStates] = useState<SwitchStates>({
+    switch1: true,
+    switch2: false,
+    switch3: true,
+  });
+  
+  const handleChange = (name: keyof SwitchStates) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    setStates({
+      ...states,
+      [name]: event.target.checked,
     });
-    
-    const handleChange = (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      setStates({
-        ...states,
-        [name]: event.target.checked,
-      });
-    };
-    
-    return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <Switch checked={states.switch1} onChange={handleChange('switch1')} color="primary" />
-          <span>Notifications</span>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <Switch checked={states.switch2} onChange={handleChange('switch2')} color="secondary" />
-          <span>Dark Mode</span>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <Switch checked={states.switch3} onChange={handleChange('switch3')} color="error" />
-          <span>Do Not Disturb</span>
-        </div>
+  };
+  
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <Switch checked={states.switch1} onChange={handleChange('switch1')} color="primary" />
+        <span>Notifications</span>
       </div>
-    );
-  },
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <Switch checked={states.switch2} onChange={handleChange('switch2')} color="secondary" />
+        <span>Dark Mode</span>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <Switch checked={states.switch3} onChange={handleChange('switch3')} color="error" />
+        <span>Do Not Disturb</span>
+      </div>
+    </div>
+  );
+};
+
+export const SwitchGroup: Story = {
+  render: () => <SwitchGroupComponent />,
 };

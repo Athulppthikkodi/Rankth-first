@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
+import { css, SerializedStyles } from "@emotion/react";
 import { ReactNode, useState } from "react";
 
 interface RadioGroupProps {
@@ -8,7 +8,7 @@ interface RadioGroupProps {
   name: string;
   children: ReactNode;
   direction?: "row" | "column";
-  sx?: any;
+  sx?: SerializedStyles;
 }
 
 const RadioGroup: React.FC<RadioGroupProps> = ({

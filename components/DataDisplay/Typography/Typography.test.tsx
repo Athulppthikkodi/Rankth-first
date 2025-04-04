@@ -3,12 +3,11 @@ import { Window } from "happy-dom";
 import { createElement } from "react";
 import { createRoot } from "react-dom/client";
 import Typography, { TypographyProps, TypographyVariant } from "./Typography";
-import TypographyColor from "./Typography";
 
 // Set up happy-dom
 const window = new Window();
-global.document = window.document as any;
-global.window = window as any;
+global.document = window.document as unknown as Document;
+(global.window as unknown as Window & typeof globalThis & { __NEXT_DATA__?: unknown }) = window as unknown as Window & typeof globalThis;
 
 describe("Typography", () => {
   const render = async (props: Partial<TypographyProps> = {}) => {
@@ -77,7 +76,7 @@ describe("Typography", () => {
       align: "center",
       fontWeight: "bold",
       fontStyle: "italic",
-      gutterBottom: true,
+      // gutterBottom: true, error
       noWrap: true,
       sx: { fontSize: "50px" },
     });

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { act } from "react";
 import MainNavigation from "@/components/MainNavigation/MainNavigation";
 import Box from "@/components/Layout/Box/Box";
 import Container from "@/components/Layout/Container/Container";
@@ -18,10 +18,7 @@ const Page = () => {
   ];
 
   const router = useRouter();
-  const handleNavItemClick = (index: number) => {
-    console.log(`Clicked nav item at index ${index}`);
-    // Additional click handling if needed
-  };
+
 
   const handleAvatarClick = () => {
     console.log("Avatar clicked");
@@ -35,13 +32,13 @@ const Page = () => {
     <>
       <MainNavigation
         items={navigationItems}
-        onItemClick={handleNavItemClick}
-        onAvatarClick={handleAvatarClick}
         logoUrl="/"
+        onAvatarClick={handleAvatarClick}
         // Custom logo example:
         // logo={<YourLogoComponent />}
         // Avatar image example:
         // avatarSrc="https://example.com/avatar.jpg"
+        
       />
       <Box sx={{ background: "#F1F5F8", padding: "70px 0 207px" }}>
         <Box>

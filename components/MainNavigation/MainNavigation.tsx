@@ -16,7 +16,6 @@ interface MainNavigationProps {
   logo?: React.ReactNode;
   logoUrl?: string; // URL for the logo to link to
   items: NavItemProps[];
-  onItemClick?: (index: number) => void;
   avatarSrc?: string;
   onAvatarClick?: () => void;
 }
@@ -162,7 +161,6 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
   logo,
   logoUrl = "/",
   items,
-  onItemClick,
   avatarSrc,
   onAvatarClick,
 }) => {
@@ -194,6 +192,7 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
                 key={index}
                 label={item.label}
                 to={item.to}
+                
               />
             ))}
           </NavItemsContainer>

@@ -1,5 +1,4 @@
 // Avatar.stories.tsx
-import React from "react";
 import { Meta, StoryObj } from "@storybook/react";
 import Avatar from "./Avatar";
 

@@ -1,13 +1,11 @@
 /** @jsxImportSource @emotion/react */
 import { test, expect, describe } from "bun:test";
 import { renderToString } from "react-dom/server";
-import { css } from "@emotion/react";
 import Stack from "./Stack"; // Update the import path as needed
-import React from "react";
 
 describe("Stack Component", () => {
-  const getSerializedStyles = (html: string): string => {
-    const match = html.match(/css-[^"]+/);
+  const getSerializedStyles = (styledHtml: string): string => {
+    const match = styledHtml.match(/css-[^"]+/);
     return match ? match[0] : '';
   };
 

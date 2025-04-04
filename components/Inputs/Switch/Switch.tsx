@@ -2,7 +2,7 @@
 import { css, CSSObject } from "@emotion/react";
 import { CSSProperties } from "react";
 
-interface SwitchProps {
+export interface SwitchProps {
   checked?: boolean;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   disabled?: boolean;
