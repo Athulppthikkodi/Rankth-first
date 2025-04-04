@@ -13,7 +13,7 @@ import bbdo from "@/public/bbdo.svg";
 import semrush from "@/public/semrush.svg";
 import { useRouter } from "next/navigation";
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -194,4 +194,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

@@ -12,7 +12,7 @@ import AddTeamPopup from "@/components/Popup/AddTeamPopup/AddTeamPopup";
 import ModePopup from "@/components/Popup/ModePopup/ModePopup";
 import { TentTree } from "lucide-react";
 
-const page = () => {
+const Page = () => {
   const [timelinePopup, setTimelinePopup] = useState(false);
   const [addTeamPopup, setAddTeamPopup] = useState(false);
   const [modePopup, setModePopup] = useState(false);
@@ -132,4 +132,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

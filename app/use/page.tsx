@@ -10,7 +10,7 @@ import Input from "@/components/Inputs/Input/Input";
 import Button from "@/components/Inputs/Button/Button";
 import { useRouter } from "next/navigation";
 
-const page = () => {
+const Page = () => {
   const [activeTab, setActiveTab] = useState<"agency" | "myself">("agency");
 const router = useRouter();
   const handleClick = (tab: "agency" | "myself") => {
@@ -153,4 +153,4 @@ function handleNavigate(): void {
   );
 };
 
-export default page;
+export default Page;

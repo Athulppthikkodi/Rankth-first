@@ -7,7 +7,7 @@ import Typography from "@/components/DataDisplay/Typography/Typography";
 import Input from "@/components/Inputs/Input/Input";
 import Button from "@/components/Inputs/Button/Button";
 import { useRouter } from "next/navigation";
-const page = () => {
+const Page = () => {
   const navigationItems = [
     { label: "Phase Planner", to: "/phase-planner" },
     { label: "Tasks", to: "/tasks" },
@@ -128,4 +128,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

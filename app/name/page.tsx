@@ -7,7 +7,7 @@ import Input from "@/components/Inputs/Input/Input";
 import Button from "@/components/Inputs/Button/Button";
 import Container from "@/components/Layout/Container/Container";
 import { useRouter } from "next/navigation";
-const page = () => {
+const Page = () => {
  const router = useRouter();
   function handleNavigate(): void {
     console.log("Navigating to the next step...");
@@ -31,4 +31,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
