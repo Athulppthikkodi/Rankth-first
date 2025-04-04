@@ -64,10 +64,6 @@ const meta = {
       control: { type: "boolean" },
       description: "Prevent text wrapping",
     },
-    gutterBottom: {
-      control: { type: "boolean" },
-      description: "Add bottom margin",
-    },
     paragraph: {
       control: { type: "boolean" },
       description: "Render as paragraph with margins",
