@@ -2,11 +2,8 @@ import { expect, test, describe } from "bun:test";
 import { Window } from "happy-dom";
 import { createElement } from "react";
 import { createRoot } from "react-dom/client";
-import Typography, {
-  TypographyProps,
-  TypographyVariant,
-  TypographyColor,
-} from "./Typography";
+import Typography, { TypographyProps, TypographyVariant } from "./Typography";
+import TypographyColor from "./Typography";
 
 // Set up happy-dom
 const window = new Window();
@@ -21,109 +18,77 @@ describe("Typography", () => {
 
     await new Promise<void>((resolve) => {
       root.render(createElement(Typography, finalProps));
-      // Wait for next tick to ensure render is complete
       setTimeout(resolve, 0);
     });
 
     return container;
   };
 
-  // Helper function for class checking with type safety
-  const hasClass = (element: Element | null, className: string): boolean => {
-    if (!element) return false;
-    const classes = element.className.split(" ");
-    return classes.some((cls) => cls.trim() === className.trim());
-  };
-
   test("renders default typography", async () => {
     const container = await render();
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    const element = container.firstChild as HTMLElement;
+    const element = container.querySelector("p") as HTMLElement;
     expect(element).toBeDefined();
     expect(element.textContent).toBe("Test Text");
-    expect(hasClass(element, "text-base")).toBe(true);
   });
 
-  // Test variants
-  const variants: Record<TypographyVariant, { tag: string; class: string }> = {
-    h1: { tag: "h1", class: "text-[40px]" },
-    h2: { tag: "h2", class: "text-[30px]" },
-    h3: { tag: "h3", class: "text-[25px]" },
-    h4: { tag: "h4", class: "text-[20px]" },
-    h5: { tag: "h5", class: "text-[18px]" },
-    h6: { tag: "h6", class: "text-[16px]" },
-    subtitle: { tag: "h6", class: "text-[14px]" },
-    body1: { tag: "span", class: "text-[14px]" },
-    body2: { tag: "span", class: "text-[13px]" },
-  } as const;
+  const variants: Record<TypographyVariant, { tag: string }> = {
+    h1: { tag: "h1" },
+    h2: { tag: "h2" },
+    h3: { tag: "h3" },
+    h4: { tag: "h4" },
+    h5: { tag: "h5" },
+    h6: { tag: "h6" },
+    subtitle1: { tag: "p" },
+    subtitle2: { tag: "p" },
+    body1: { tag: "p" },
+    body2: { tag: "p" },
+    caption: { tag: "span" },
+    overline: { tag: "span" },
+  };
 
   Object.entries(variants).forEach(([variant, config]) => {
     test(`renders ${variant} variant correctly`, async () => {
       const container = await render({ variant: variant as TypographyVariant });
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      const element = container.firstChild as HTMLElement;
+      const element = container.querySelector(config.tag) as HTMLElement;
       expect(element).toBeDefined();
       expect(element.tagName.toLowerCase()).toBe(config.tag);
-      expect(hasClass(element, config.class)).toBe(true);
     });
   });
 
-  // Test colors
-  Object.entries({
-    primary: "text-blue-600",
-    secondary: "text-purple-600",
-    error: "text-red-600",
-    warning: "text-yellow-600",
-    info: "text-sky-600",
-    success: "text-green-600",
-    initial: "text-gray-900",
-    textPrimary: "text-gray-900",
-    textSecondary: "text-gray-600",
-  } as const).forEach(([color, expectedClass]) => {
-    test(`renders ${color} color correctly`, async () => {
-      const container = await render({ color: color as TypographyColor });
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      const element = container.firstChild as HTMLElement;
-      expect(element).toBeDefined();
-      expect(hasClass(element, expectedClass)).toBe(true);
-    });
-  });
-
-  // Special cases
-  test("renders as paragraph", async () => {
-    const container = await render({ paragraph: true });
-    await new Promise((resolve) => setTimeout(resolve, 0));
+  test("applies custom styles via sx prop", async () => {
+    const container = await render({ sx: { color: "red", fontSize: "20px" } });
     const element = container.firstChild as HTMLElement;
     expect(element).toBeDefined();
-    expect(element.tagName.toLowerCase()).toBe("p");
-    expect(hasClass(element, "mb-4")).toBe(true);
+    expect(getComputedStyle(element).color).toBe("red"); // Fix: Use getComputedStyle to validate Emotion-applied styles
+    expect(getComputedStyle(element).fontSize).toBe("20px");
   });
 
-  test("applies text wrapping", async () => {
-    const container = await render({ noWrap: true });
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    const element = container.firstChild as HTMLElement;
+  test("renders with custom component", async () => {
+    const container = await render({ component: "div" });
+    const element = container.querySelector("div") as HTMLElement;
     expect(element).toBeDefined();
-    expect(hasClass(element, "whitespace-nowrap")).toBe(true);
+    expect(element.tagName.toLowerCase()).toBe("div");
   });
 
   test("combines multiple props correctly", async () => {
     const container = await render({
       variant: "h1",
-      color: "primary",
+      color: "blue",
       align: "center",
       fontWeight: "bold",
-      noWrap: true,
+      fontStyle: "italic",
       gutterBottom: true,
+      noWrap: true,
+      sx: { fontSize: "50px" },
     });
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    const element = container.firstChild as HTMLElement;
+    const element = container.querySelector("h1") as HTMLElement;
     expect(element).toBeDefined();
-    expect(element.tagName.toLowerCase()).toBe("h1");
-    expect(hasClass(element, "text-[40px]")).toBe(true);
-    expect(hasClass(element, "text-blue-600")).toBe(true);
-    expect(hasClass(element, "text-center")).toBe(true);
-    expect(hasClass(element, "whitespace-nowrap")).toBe(true);
-    expect(hasClass(element, "mb-4")).toBe(true);
+    expect(getComputedStyle(element).color).toBe("blue"); // Fix: Use getComputedStyle for color validation
+    expect(getComputedStyle(element).textAlign).toBe("center");
+    expect(getComputedStyle(element).fontWeight).toBe("700");
+    expect(getComputedStyle(element).fontStyle).toBe("italic");
+    expect(getComputedStyle(element).marginBottom).toBe("0.5rem");
+    expect(getComputedStyle(element).whiteSpace).toBe("nowrap");
+    expect(getComputedStyle(element).fontSize).toBe("50px");
   });
 });

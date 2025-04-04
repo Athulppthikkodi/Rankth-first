@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState } from "react";
-import { css, SerializedStyles } from "@emotion/react";
+import { css, CSSObject } from "@emotion/react";
 
 type CheckboxProps = {
   checked?: boolean;
@@ -9,7 +9,7 @@ type CheckboxProps = {
   defaultChecked?: boolean;
   label?: string;
   size?: "small" | "medium" | "large";
-  sx?: SerializedStyles;
+  sx?: CSSObject;
 };
 
 const sizeStyles = {
@@ -36,27 +36,29 @@ const checkboxContainer = css({
 
 const checkboxBase = css({
   appearance: "none",
-  border: "2px solid #666",
+  border: "2px solid #00000042",
   borderRadius: "50px",
   transition: "all 0.2s ease-in-out",
   position: "relative",
   cursor: "pointer",
   margin: 0,
   ":checked": {
-    backgroundColor: "#1976d2",
-    borderColor: "#1976d2",
+    backgroundColor: "#000000",
+    borderColor: "#000000",
   },
   ":checked::after": {
     content: '""',
     position: "absolute",
+    backgroundImage: 'url("/check.svg")',
+    backgroundSize: "contain",
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "center",
     left: "50%",
     top: "50%",
-    width: "5px",
-    height: "10px",
-    border: "solid white",
-    borderWidth: "0 2px 2px 0",
+    width: "100%",
+    height: "100%",
     transform: "translate(-50%, -50%)",
-    backgroundColor: "red",
+    border: "none",
   },
   ":disabled": {
     borderColor: "#ccc",
@@ -64,7 +66,7 @@ const checkboxBase = css({
     backgroundColor: "#f0f0f0",
   },
   ":hover:not(:disabled)": {
-    borderColor: "#1976d2",
+    borderColor: "#000000",
   },
 });
 

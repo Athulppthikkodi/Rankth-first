@@ -9,7 +9,8 @@ type ButtonProps = {
   children?: React.ReactNode;
   onClick: () => void;
   disabled?: boolean;
-  sx?: CSSObject // Accepts plain style objects like MUI's `sx`
+  type?: "button" | "submit" | "reset";
+  sx?: CSSObject; // Accepts plain style objects like MUI's `sx`
 };
 
 const Button: React.FC<ButtonProps> = ({
@@ -19,6 +20,7 @@ const Button: React.FC<ButtonProps> = ({
   children,
   onClick,
   disabled = false,
+  type = "button",
   sx = {},
 }) => {
   const baseStyles = css`
@@ -26,35 +28,32 @@ const Button: React.FC<ButtonProps> = ({
     align-items: center;
     justify-content: center;
     font-weight: 500;
-    border-radius: 4px;
-    text-transform: uppercase;
+    border-radius: 6px;
+    text-transform: Capitalize;
     cursor: ${disabled ? "not-allowed" : "pointer"};
     transition: all 0.2s ease-in-out;
     outline: none;
     border: none;
-    &:focus {
-      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
-    }
   `;
 
   const sizeStyles = {
     small: css`
-      padding: 4px 10px;
-      font-size: 12px;
+      padding: 5px 10px;
+      font-size: 13px;
     `,
     medium: css`
-      padding: 6px 16px;
+      padding: 9px 26px;
       font-size: 14px;
     `,
     large: css`
-      padding: 8px 20px;
+      padding: 12px 26px;
       font-size: 16px;
     `,
   };
 
   const variantStyles = {
     contained: css`
-      background-color: #1976d2;
+      background-color: #00BC74;
       color: #fff;
       &:hover {
         background-color: #1565c0;
@@ -67,7 +66,7 @@ const Button: React.FC<ButtonProps> = ({
     outlined: css`
       background: transparent;
       color: #1976d2;
-      border: 2px solid #1976d2;
+      border: 1px solid #D6D6D9;
       &:hover {
         background: rgba(25, 118, 210, 0.1);
       }
@@ -96,6 +95,7 @@ const Button: React.FC<ButtonProps> = ({
       css={[baseStyles, sizeStyles[size], variantStyles[variant], customStyles]} // Merge all styles
       onClick={onClick}
       disabled={disabled}
+      type={type}
     >
       {icon && <span css={{ marginRight: "8px" }}>{icon}</span>}
       {children}

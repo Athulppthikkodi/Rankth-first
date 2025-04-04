@@ -95,7 +95,7 @@ export const AllVariants: Story = {
       <Typography variant="h4">h4. Heading</Typography>
       <Typography variant="h5">h5. Heading</Typography>
       <Typography variant="h6">h6. Heading</Typography>
-      <Typography variant="subtitle">subtitle. Text</Typography>
+      <Typography variant="subtitle1">subtitle. Text</Typography>
       <Typography variant="body1">body1. Lorem ipsum dolor sit amet.</Typography>
       <Typography variant="body2">body2. Lorem ipsum dolor sit amet.</Typography>
     </div>
@@ -145,4 +145,33 @@ export const FontWeights: Story = {
       <Typography fontWeight="bold">Bold text</Typography>
     </div>
   ),
+};
+
+export const FontStyles: Story = {
+  render: () => (
+    <div className="space-y-2">
+      <Typography fontStyle="normal">Normal text</Typography>
+      <Typography fontStyle="italic">Italic text</Typography>
+    </div>
+  ),
+};
+
+export const NoWrap: Story = {
+  render: () => (
+    <div className="space-y-2" style={{ width: "200px" }}>
+      <Typography noWrap>
+        This is a very long text that will not wrap and will be truncated with an ellipsis.
+      </Typography>
+      <Typography>
+        This is a very long text that will wrap normally without truncation.
+      </Typography>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Demonstrates the `noWrap` property to prevent text wrapping.',
+      },
+    },
+  },
 };

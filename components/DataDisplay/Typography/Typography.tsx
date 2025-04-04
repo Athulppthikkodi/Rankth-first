@@ -1,179 +1,137 @@
-// components/Typography.tsx
-import React, { ReactNode } from "react";
+/** @jsxImportSource @emotion/react */
+import React, { ReactNode, ElementType } from "react";
+import { css, CSSObject } from "@emotion/react";
 
-// Define all possible variant options
-type TypographyVariant =
+export type TypographyVariant =
   | "h1"
   | "h2"
   | "h3"
   | "h4"
   | "h5"
   | "h6"
-  | "subtitle"
-  // | "subtitle2"
+  | "subtitle1"
+  | "subtitle2"
   | "body1"
   | "body2"
-  // | "button"
-  // | "caption"
-  // | "overline";
+  | "caption"
+  | "overline";
 
-// Define color options
-type TypographyColor =
-  | "initial"
-  | "inherit"
-  | "primary"
-  | "secondary"
-  | "textPrimary"
-  | "textSecondary"
-  | "error"
-  | "warning"
-  | "info"
-  | "success";
+export type TypographyAlign = "inherit" | "left" | "center" | "right" | "justify";
 
-// Define align options
-type TypographyAlign = "inherit" | "left" | "center" | "right" | "justify";
-
-// Define font weight
-type FontWeight = "light" | "regular" | "medium" | "bold";
-
-// Define font style
-type FontStyle = "normal" | "italic";
-
-// Define component props with TypeScript
-interface TypographyProps {
+export type TypographyProps = {
   variant?: TypographyVariant;
-  component?: React.ElementType;
-  color?: TypographyColor;
   align?: TypographyAlign;
-  fontWeight?: FontWeight;
-  fontStyle?: FontStyle;
+  color?: string;
   noWrap?: boolean;
-  gutterBottom?: boolean;
   paragraph?: boolean;
-  children: ReactNode;
+  fontWeight?: "light" | "regular" | "medium" | "bold";
+  fontStyle?: "normal" | "italic";
+  component?: ElementType;
+  children?: ReactNode;
+  sx?: CSSObject;
   className?: string;
-  [key: string]: any; // For any additional props
-}
+};
+
+// Map variant to valid HTML elements
+const variantMapping: Record<TypographyVariant, ElementType> = {
+  h1: "h1",
+  h2: "h2",
+  h3: "h3",
+  h4: "h4",
+  h5: "h5",
+  h6: "h6",
+  subtitle1: "p",
+  subtitle2: "p",
+  body1: "div",
+  body2: "div",
+  caption: "span",
+  overline: "span",
+};
+
+const baseStyles = css`
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+  p {
+    font-size: 16px;
+    color: inherit;
+  }
+`;
+
+const variantStyles: Record<TypographyVariant, CSSObject> = {
+  h1: { fontSize: "40px", fontWeight: 700 , lineHeight: "normal" },
+  h2: { fontSize: "30px", fontWeight: 700, lineHeight: "normal" },
+  h3: { fontSize: "25px", fontWeight: 700,  lineHeight: "normal" },
+  h4: { fontSize: "20px", fontWeight: 700 , lineHeight: "normal" },
+  h5: { fontSize: "18px", fontWeight: 700, lineHeight: "normal" },
+  h6: { fontSize: "16px", fontWeight: 700, lineHeight: "normal" },
+  subtitle1: { fontSize: "0.875rem", fontWeight: 500, lineHeight: 1.5 },
+  subtitle2: { fontSize: "0.75rem", fontWeight: 500, lineHeight: 1.5 },
+  body1: {  fontWeight: 400, lineHeight: 1.5 },
+  body2: { fontSize: "0.875rem", fontWeight: 400, lineHeight: 1.5 },
+  caption: { fontSize: "0.75rem", fontWeight: 400, lineHeight: 1.4 },
+  overline: { fontSize: "0.625rem", fontWeight: 400, lineHeight: 1.4, textTransform: "uppercase" },
+};
+
+const fontWeightStyles: Record<string, CSSObject> = {
+  light: { fontWeight: 300 },
+  regular: { fontWeight: 400 },
+  medium: { fontWeight: 500 },
+  bold: { fontWeight: 700 },
+};
+
+const fontStyleStyles: Record<string, CSSObject> = {
+  normal: { fontStyle: "normal" },
+  italic: { fontStyle: "italic" },
+};
+
+const alignStyles: Record<TypographyAlign, CSSObject> = {
+  inherit: {},
+  left: { textAlign: "left" },
+  center: { textAlign: "center" },
+  right: { textAlign: "right" },
+  justify: { textAlign: "justify" },
+};
 
 const Typography: React.FC<TypographyProps> = ({
   variant = "body1",
-  component,
-  color = "inherit",
   align = "inherit",
-  fontWeight = "bold",
-  fontStyle,
+  color = "inherit",
   noWrap = false,
-  gutterBottom = false,
   paragraph = false,
+  fontWeight,
+  fontStyle = "normal",
+  component,
   children,
+  sx = {},
   className = "",
   ...props
 }) => {
-  // Define styles for different variants
-  const variantStyles: Record<TypographyVariant, string> = {
-    h1: "text-[40px] font-bold tracking-tight sm:text-[40px]",
-    h2: "text-[30px] font-bold tracking-tight",
-    h3: "text-[25px] font-bold",
-    h4: "text-[20px] font-bold",
-    h5: "text-[18px] font-bold",
-    h6: "text-[16px] font-bold",
-    subtitle: "text-lg font-medium text-[14px]",
-    // subtitle2: "text-base font-medium",
-    body1: "text-base leading-7 text-[14px]",
-    body2: "text-sm leading-6 text-[13px]",
-    // button: "text-sm font-medium uppercase",
-    // caption: "text-xs",
-    // overline: "text-xs uppercase tracking-wider",
-  };
+  // Resolve the correct HTML element
+  const Component: ElementType =
+    component || (paragraph ? "p" : variantMapping[variant] || "span");
 
-  // Define color styles
-  const colorStyles: Record<TypographyColor, string> = {
-    initial: "text-gray-900 dark:text-gray-100",
-    inherit: "",
-    primary: "text-blue-600 dark:text-blue-400",
-    secondary: "text-purple-600 dark:text-purple-400",
-    textPrimary: "text-gray-900 dark:text-gray-100",
-    textSecondary: "text-gray-600 dark:text-gray-400",
-    error: "text-red-600 dark:text-red-400",
-    warning: "text-yellow-600 dark:text-yellow-400",
-    info: "text-sky-600 dark:text-sky-400",
-    success: "text-green-600 dark:text-green-400",
-  };
+  // Apply default fontWeight from variant if not explicitly passed
+  const defaultFontWeight = fontWeight
+    ? fontWeightStyles[fontWeight]
+    : { fontWeight: variantStyles[variant].fontWeight };
 
-  // Define alignment styles
-  const alignStyles: Record<TypographyAlign, string> = {
-    inherit: "",
-    left: "text-left",
-    center: "text-center",
-    right: "text-right",
-    justify: "text-justify",
-  };
-
-  // Define font weight styles
-  const fontWeightStyles: Record<FontWeight, string> = {
-    light: "font-light",
-    regular: "font-normal",
-    medium: "font-medium",
-    bold: "font-bold",
-  };
-
-  // Define font style
-  const fontStyleClasses: Record<FontStyle, string> = {
-    normal: "",
-    italic: "italic",
-  };
-
-  // Default component mapping based on variant
-  const defaultComponents: Record<TypographyVariant, React.ElementType> = {
-    h1: "h1",
-    h2: "h2",
-    h3: "h3",
-    h4: "h4",
-    h5: "h5",
-    h6: "h6",
-    subtitle: "h6",
-    // subtitle2: "h6",
-    body1: paragraph ? "p" : "span",
-    body2: paragraph ? "p" : "span",
-    // button: "span",
-    // caption: "span",
-    // overline: "span",
-  };
-
-  // Determine which HTML element to use
-  const Component =
-    component || (paragraph ? "p" : defaultComponents[variant]) || "span";
-
-  // Build the complete className
-  const classes = [
+  const combinedStyles = css([
+    baseStyles,
     variantStyles[variant],
-    colorStyles[color],
+    defaultFontWeight, // Automatically apply based on variant
+    fontStyleStyles[fontStyle],
     alignStyles[align],
-    fontWeight ? fontWeightStyles[fontWeight] : "",
-    fontStyle ? fontStyleClasses[fontStyle] : "",
-    noWrap ? "whitespace-nowrap overflow-hidden text-ellipsis" : "",
-    gutterBottom ? "mb-4" : "",
-    paragraph ? "mb-4" : "",
-    className,
-  ]
-    .filter(Boolean)
-    .join(" ");
+    noWrap && { whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" },
+    { color },
+    sx,
+  ]);
 
   return (
-    <Component className={classes} {...props}>
+    <Component css={combinedStyles} className={className} {...props}>
       {children}
     </Component>
   );
 };
 
 export default Typography;
-
-// Export types for use in tests and stories
-export type {
-  TypographyVariant,
-  TypographyColor,
-  TypographyAlign,
-  FontWeight,
-  FontStyle,
-  TypographyProps
-};

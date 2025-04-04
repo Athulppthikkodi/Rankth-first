@@ -41,49 +41,56 @@ const Grid: React.FC<GridProps> = ({
   ...props
 }) => {
   const gridStyles = css`
-    ${container && `
+    ${container &&
+    `
       display: grid;
       ${cols ? `grid-template-columns: repeat(${cols}, minmax(0, 1fr));` : ""}
       ${rows ? `grid-template-rows: repeat(${rows}, minmax(0, 1fr));` : ""}
-      ${spacing ? `gap: ${spacing * 8}px;` : ""}
-      ${rowSpacing ? `row-gap: ${rowSpacing * 8}px;` : ""}
-      ${columnSpacing ? `column-gap: ${columnSpacing * 8}px;` : ""}
+      ${spacing ? `gap: ${spacing}px;` : ""}
+      ${rowSpacing ? `row-gap: ${rowSpacing}px;` : ""}
+      ${columnSpacing ? `column-gap: ${columnSpacing}px;` : ""}
     `}
 
-    ${item && `
+    ${item &&
+    `
       display: block;
     `}
 
     /* Responsive grid template columns */
-    ${size?.xs && `
+    ${size?.xs &&
+    `
       @media (max-width: 640px) {
         ${size.xs.cols ? `grid-template-columns: repeat(${size.xs.cols}, minmax(0, 1fr));` : ""}
         ${size.xs.rows ? `grid-template-rows: repeat(${size.xs.rows}, minmax(0, 1fr));` : ""}
       }
     `}
 
-    ${size?.sm && `
-      @media (min-width: 641px) {
+    ${size?.sm &&
+    `
+      @media (min-width: 641px) and (max-width: 768px) {
         ${size.sm.cols ? `grid-template-columns: repeat(${size.sm.cols}, minmax(0, 1fr));` : ""}
         ${size.sm.rows ? `grid-template-rows: repeat(${size.sm.rows}, minmax(0, 1fr));` : ""}
       }
     `}
 
-    ${size?.md && `
-      @media (min-width: 769px) {
+    ${size?.md &&
+    `
+      @media (min-width: 769px) and (max-width: 1024px) {
         ${size.md.cols ? `grid-template-columns: repeat(${size.md.cols}, minmax(0, 1fr));` : ""}
         ${size.md.rows ? `grid-template-rows: repeat(${size.md.rows}, minmax(0, 1fr));` : ""}
       }
     `}
 
-    ${size?.lg && `
-      @media (min-width: 1025px) {
+    ${size?.lg &&
+    `
+      @media (min-width: 1025px) and (max-width: 1280px) {
         ${size.lg.cols ? `grid-template-columns: repeat(${size.lg.cols}, minmax(0, 1fr));` : ""}
         ${size.lg.rows ? `grid-template-rows: repeat(${size.lg.rows}, minmax(0, 1fr));` : ""}
       }
     `}
 
-    ${size?.xl && `
+    ${size?.xl &&
+    `
       @media (min-width: 1281px) {
         ${size.xl.cols ? `grid-template-columns: repeat(${size.xl.cols}, minmax(0, 1fr));` : ""}
         ${size.xl.rows ? `grid-template-rows: repeat(${size.xl.rows}, minmax(0, 1fr));` : ""}
@@ -91,9 +98,7 @@ const Grid: React.FC<GridProps> = ({
     `}
 
     /* Apply custom styles */
-    ${typeof sx === 'string' ? sx : ''}
-    ${sx && typeof sx === 'object' && !('styles' in sx) ? css(sx) : ''}
-    ${sx && typeof sx === 'object' && 'styles' in sx ? sx : ''}
+    ${sx && css(sx)}
   `;
 
   return (

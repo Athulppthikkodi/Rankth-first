@@ -78,7 +78,7 @@ export default {
   },
 } as Meta;
 
-const Template: StoryFn<RadioProps> = (args) => <Radio {...args} />;
+const Template: StoryFn<RadioProps> = (args: React.JSX.IntrinsicAttributes & RadioProps) => <Radio {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {

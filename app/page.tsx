@@ -1,196 +1,131 @@
 "use client";
-import Button from "@/components/Inputs/Button/Button";
-import Image from "next/image";
-import btnIcon from "@/public/btn-icon.svg";
-import Chips from "@/components/DataDisplay/Chip/Chip";
-import Typography from "@/components/DataDisplay/Typography/Typography";
-import Grid from "@/components/Layout/Grid/Grid";
+import React from "react";
+import MainNavigation from "@/components/MainNavigation/MainNavigation";
 import Box from "@/components/Layout/Box/Box";
-import Stack from "@/components/Layout/Stack/Stack";
 import Container from "@/components/Layout/Container/Container";
+import Typography from "@/components/DataDisplay/Typography/Typography";
 import Input from "@/components/Inputs/Input/Input";
-import Checkbox from "@/components/Inputs/Checkbox/Checkbox";
-import Radio from "@/components/Inputs/Radio/Radio";
-import RadioGroup from "@/components/Inputs/RadioGroup/RadioGroup";
-export default function Home() {
-  return (
-    <div>
-      Home page
-      <Button onClick={() => console.log("clicked")}>Base</Button>
-      <Button onClick={() => console.log("clicked")}>Base</Button>
-      <Button
-        variant="contained"
-        size="large"
-        onClick={() => console.log("Clicked")}
-        sx={{
-          backgroundColor: "red",
-          borderRadius: "8px",
-          "&:hover": {
-            backgroundColor: "darkred",
-          },
-        }}
-      >
-        Custom Button
-      </Button>
-      <Typography variant="h1" className="text-primary">
-        H1
-      </Typography>
-      <Typography variant="h2" color="error" component="h3">
-        H22
-      </Typography>
-      <Typography variant="h3">H3</Typography>
-      <Chips type="high" />
-      <Chips type="low" />
-      <Chips type="link-building" />
-      <Grid
-        container
-        cols={4}
-        rows={1}
-        spacing={10}
-        className="p-6 bg-gray-200"
-      >
-        <Grid
-          container
-          cols={1}
-          rows={3}
-          className="p-6 bg-gray-200"
-          rowSpacing={5}
-          columnSpacing={6}
-        >
-          <Grid
-            item
-            className="bg-red-500 text-white p-4 "
-            size={{ sm: { cols: 1, rows: 1 }, xl: { cols: 2, rows: 2 } }}
-          >
-            Box 1
-          </Grid>
-          <Grid
-            item
-            className="bg-yellow-500 text-white p-4"
-            size={{ sm: { cols: 1, rows: 1 } }}
-          >
-            Box 2
-          </Grid>
-          <Grid
-            item
-            className="bg-yellow-500 text-white p-4"
-            size={{ sm: { cols: 2, rows: 1 } }}
-          >
-            Box 2
-          </Grid>
-        </Grid>
+import Button from "@/components/Inputs/Button/Button";
+import { useRouter } from "next/navigation";
+const page = () => {
+  const navigationItems = [
+    { label: "Phase Planner", to: "/phase-planner" },
+    { label: "Tasks", to: "/tasks" },
+    { label: "Link Building", to: "/link-building" },
+    { label: "Content", to: "/content" },
+    { label: "File Manager", to: "/file-manager" },
+    { label: "Reports", to: "/reports" },
+  ];
 
-        <Grid
-          item
-          className="bg-purple-500 text-white p-4"
-          size={{ sm: { cols: 1, rows: 1 } }}
-          spacing={0}
-        >
-          Box 3
-        </Grid>
-        <Grid
-          item
-          className="bg-purple-500 text-yellow p-4"
-          size={{ sm: { cols: 1, rows: 1 } }}
-          spacing={10}
-        >
-          Box 4
-        </Grid>
-        <Grid
-          item
-          className="bg-purple-500 text-red p-4"
-          size={{ sm: { cols: 1, rows: 1 } }}
-          spacing={10}
-        >
-          Box 5
-        </Grid>
-      </Grid>
-      <Box
-        component="section"
-        display="flex"
-        width={300}
-        height={200}
-        padding={16}
-        bgcolor="lightblue"
-        border="2px solid blue"
-        borderRadius={8}
-        boxShadow="0px 4px 10px rgba(0, 0, 0, 0.1)"
-      >
-        This is a custom Box!
+  const router = useRouter();
+  const handleNavItemClick = (index: number) => {
+    console.log(`Clicked nav item at index ${index}`);
+    // Additional click handling if needed
+  };
+
+  const handleAvatarClick = () => {
+    console.log("Avatar clicked");
+    // Open profile menu or other actions
+  };
+  const handleAnalyse = () => {
+    console.log("Analyse clicked");
+    router.push("/register");
+  };
+  return (
+    <>
+      <MainNavigation
+        items={navigationItems}
+        onItemClick={handleNavItemClick}
+        onAvatarClick={handleAvatarClick}
+        logoUrl="/"
+        // Custom logo example:
+        // logo={<YourLogoComponent />}
+        // Avatar image example:
+        // avatarSrc="https://example.com/avatar.jpg"
+      />
+      <Box sx={{ background: "#F1F5F8", padding: "70px 0 207px" }}>
+        <Box>
+          <Container maxWidth="lg">
+            <Typography variant="h1" sx={{ paddingBottom: "59px" }}>
+              30% of SEO projects fail due to inadequate
+              <br /> task planning and management
+            </Typography>
+            <Typography
+              variant="h3"
+              sx={{ paddingBottom: "47px" }}
+              component="h2"
+            >
+              Analyse your website to start
+            </Typography>
+            <Box display="flex" sx={{ paddingBottom: "79px" }}>
+              <Input
+                placeholder="abc.com"
+                sx={{
+                  width: "310px",
+                  fontSize: "14px",
+                  borderRight: "none",
+                  borderTopRightRadius: "0",
+                  borderBottomRightRadius: "0",
+                }}
+              />
+              <Button
+                onClick={handleAnalyse}
+                sx={{ background: "#00BC74", textTransform: "capitalize" }}
+              >
+                Analyse
+              </Button>
+            </Box>
+            <Typography variant="h3" sx={{ paddingBottom: "40px" }}>
+              Key Insights
+            </Typography>
+            <Box
+              display="flex"
+              sx={{ gap: "47px", alignItems: "center", paddingBlock: "43px" }}
+            >
+              <Typography
+                component="span"
+                sx={{
+                  display: "block",
+                  fontSize: "53px",
+                  fontWeight: "light",
+                  border: "1px solid #00D47E",
+                  lineHeight: "85px",
+                  padding: "3px 21px 4px 16px",
+                  borderRadius: "9px",
+                }}
+              >
+                2.5x
+              </Typography>
+              <Typography paragraph className="max-w-[554px]">
+                SEO campaigns with structured project management are 2.5x more
+                likely to achieve their goals
+              </Typography>
+            </Box>
+            <Box display="flex" sx={{ gap: "47px", alignItems: "center" }}>
+              <Typography
+                component="span"
+                sx={{
+                  display: "block",
+                  fontSize: "53px",
+                  fontWeight: "light",
+                  border: "1px solid #00D47E",
+                  lineHeight: "85px",
+                  padding: "3px 10px 4px 16px",
+                  borderRadius: "9px",
+                }}
+              >
+                40%
+              </Typography>
+              <Typography paragraph sx={{ maxWidth: "554px" }}>
+                Companies using dedicated SEO project management tools see a 40%
+                increase in organic traffic growth
+              </Typography>
+            </Box>
+          </Container>
+        </Box>
       </Box>
-      <Stack spacing={2} direction="column-reverse">
-        <Box
-          component="section"
-          display="flex"
-          width={300}
-          height={200}
-          padding={16}
-          bgcolor="lightblue"
-          border="2px solid blue"
-          borderRadius={8}
-          boxShadow="0px 4px 10px rgba(0, 0, 0, 0.1)"
-        >
-          This is a custom Box1!
-          <Checkbox label="Checkbox" />
-          <RadioGroup
-            name="exampleGroup"
-            // value={selectedValue}
-            onChange={(e)=>console.log(e.target.value)}
-            direction="row"
-          >
-            <Radio value="option1" label="Option 1" />
-            <Radio value="option2" label="Option 2" />
-            <Radio value="option4" label="Option 4" />
-            <Radio value="option3" label="Option 3" disabled />
-          </RadioGroup>
-        </Box>
-        <Box
-          component="section"
-          display="flex"
-          width={300}
-          height={200}
-          padding={16}
-          bgcolor="lightblue"
-          border="2px solid blue"
-          borderRadius={8}
-          boxShadow="0px 4px 10px rgba(0, 0, 0, 0.1)"
-        >
-          This is a custom Box2!
-        </Box>
-      </Stack>
-      <Stack spacing={2} direction="column">
-        <Container sx={{ backgroundColor: "red", borderRadius: "4px" }}>
-          <Box
-            component="section"
-            display="flex"
-            width={300}
-            height={200}
-            padding={16}
-            bgcolor="lightblue"
-            border="2px solid blue"
-            borderRadius={8}
-            boxShadow="0px 4px 10px rgba(0, 0, 0, 0.1)"
-          >
-            This is a custom Box3!
-          </Box>
-        </Container>
-        <Container sx={{ backgroundColor: "red", borderRadius: "4px" }}>
-          <Box
-            component="section"
-            display="flex"
-            width={300}
-            height={200}
-            padding={16}
-            bgcolor="lightblue"
-            border="2px solid blue"
-            borderRadius={8}
-            boxShadow="0px 4px 10px rgba(0, 0, 0, 0.1)"
-          >
-            This is a custom Box3!
-          </Box>
-        </Container>
-      </Stack>
-      <Input fullWidth placeholder="Success" success statusText="Success" />
-    </div>
+    </>
   );
-}
+};
+
+export default page;

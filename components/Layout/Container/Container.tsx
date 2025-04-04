@@ -15,7 +15,7 @@ const maxWidthValues: Record<MaxWidth, string> = {
   xs: "444px",
   sm: "600px",
   md: "768px",
-  lg: "1024px",
+  lg: "1157px",
   xl: "1280px",
   fullWidth: "100%",
 };
