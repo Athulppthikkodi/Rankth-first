@@ -22,7 +22,7 @@ function handleNavigate(): void {
   return (
     <Box sx={{ background: "#F1F5F8" }}>
       <MainNavigation items={[]} />
-      <Box>
+      <Box sx={{ padding: "0 0 100px" }}>
         <Container>
           <Typography
             variant="h3"
