@@ -1,5 +1,7 @@
 "use client";
 import React, { useState } from "react";
+import { useMutation } from '@apollo/client';
+import { CREATE_AGENCY } from '@/graphql/mutations/agency';
 import Box from "@/components/Layout/Box/Box";
 import MainNavigation from "@/components/MainNavigation/MainNavigation";
 import Typography from "@/components/DataDisplay/Typography/Typography";
@@ -9,16 +11,87 @@ import { Building2, User } from "lucide-react";
 import Input from "@/components/Inputs/Input/Input";
 import Button from "@/components/Inputs/Button/Button";
 import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
+import client from "@/lib/apolloclient";
 
 const Page = () => {
   const [activeTab, setActiveTab] = useState<"agency" | "myself">("agency");
-const router = useRouter();
+  const [companyName, setCompanyName] = useState("");
+  const [website, setWebsite] = useState("");
+  const [error, setError] = useState({ company: "", website: "", general: "" });
+  const router = useRouter();
+  const formState = useSelector((state: any) => state.form);
+
+  const [createAgency] = useMutation(CREATE_AGENCY, {
+    client, // Add Apollo client instance
+  });
+
+  const validateWebsite = (url: string) => {
+    if (!url) return false;
+    try {
+      // Add http:// if not present
+      const urlToTest = url.startsWith('http') ? url : `https://${url}`;
+      new URL(urlToTest);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const handleNavigate = () => {
+    router.push("/dashboardEmpty");
+  };
+
+  const handleCreateAgency = async () => {
+    try {
+      setError({ company: "", website: "", general: "" });
+      console.log('FormState:', formState); // Add this to debug
+      if (!formState.userId) {
+        setError(prev => ({ ...prev, general: "User ID is required" }));
+        return;
+      }
+
+      // Validation checks
+      if (!companyName.trim()) {
+        setError(prev => ({ ...prev, company: "Company name is required" }));
+        return;
+      }
+
+      if (!website.trim()) {
+        setError(prev => ({ ...prev, website: "Website URL is required" }));
+        return;
+      }
+
+      const websiteUrl = website.trim().startsWith('http') 
+        ? website.trim() 
+        : `https://${website.trim()}`;
+
+      const input = {
+        name: companyName.trim(),
+        website: websiteUrl,
+        ownerId: formState.userId,
+      };
+      
+      console.log('Mutation Input:', input); // Add this to debug
+
+      const response = await createAgency({
+        variables: { input }
+      });
+
+      if (response.data?.createAgency) {
+        router.push("/dashboardEmpty");
+      }
+    } catch (error: any) {
+      const message = error.graphQLErrors?.[0]?.message || error.message;
+      setError(prev => ({ ...prev, general: message }));
+      console.error('Error creating agency:', error);
+    }
+  };
+
   const handleClick = (tab: "agency" | "myself") => {
     setActiveTab(tab);
   };
-function handleNavigate(): void {
-  router.push("/dashboardEmpty");
-}
+
   return (
     <Box sx={{ background: "#F1F5F8" }}>
       <MainNavigation items={[]} />
@@ -110,17 +183,36 @@ function handleNavigate(): void {
                 <Typography paragraph sx={{ marginBottom: "50px", maxWidth: "588px"}}>
                   Lorem ipsum dolor sit amet consectetur adipisicing elit.
                   Laboriosam consequuntur, veniam provident, nam ad optio ea
-             
                 </Typography>
                 <Typography variant="h4" sx={{ marginBottom: "24px" }}>
                   Add Company Info
                 </Typography>
                 <Stack spacing={24}>
-                  <Input label="Company Name" sx={{ width: "438px" }} />
-                  <Input label="Custome URL" sx={{ width: "438px" }} />
+                  <Input 
+                    label="Company Name" 
+                    sx={{ width: "438px" }} 
+                    value={companyName}
+                    onChange={(e) => setCompanyName(e.target.value)}
+                    error={error.company ? true : undefined}
+                    statusText={error.company}
+                  />
+                  <Input 
+                    label="Custom URL" 
+                    sx={{ width: "438px" }} 
+                    value={website}
+                    onChange={(e) => setWebsite(e.target.value)}
+                    error={error.website ? true : undefined}
+                    statusText={error.website}
+                    placeholder="example.com"
+                  />
                 </Stack>
+                {error.general && (
+                  <Typography color="error" sx={{ marginTop: "12px" }}>
+                    {error.general}
+                  </Typography>
+                )}
                 <Button
-                  onClick={handleNavigate}
+                  onClick={handleCreateAgency}
                   variant="contained"
                   sx={{ display: "block", marginTop: "24px" }}
                 >
@@ -129,9 +221,7 @@ function handleNavigate(): void {
               </Box>
             )}
             {activeTab === "myself" && (
-              <Box
-                
-              >
+              <Box>
                 <Typography variant="h4" sx={{ marginBottom: "24px" }}>
                   Personal Project
                 </Typography>

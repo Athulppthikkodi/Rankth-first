@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, { forwardRef, useEffect } from "react";
+import React, { forwardRef } from "react";
 import { css } from "@emotion/react";
 
 type InputStatus = { error?: true; success?: never } | { error?: never; success?: true };
@@ -9,8 +9,8 @@ Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> & {
     type?: string;
     label?: string;
     placeholder?: string;
-    value?: string | number;
-    defaultValue?: string | number;
+    value?: string | number | undefined;
+    defaultValue?: string | number | undefined;
     onChange?: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     disabled?: boolean;
     fullWidth?: boolean;
@@ -20,6 +20,7 @@ Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> & {
     rows?: number;
     sx?: React.CSSProperties;
     ref?: React.RefObject<HTMLInputElement | null>;
+    icon?: React.ReactNode;
   };
 
 const sizeStyles = {
@@ -43,6 +44,7 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
     {
       type = "text",
       label,
+      name,
       placeholder = "",
       value,
       defaultValue,
@@ -56,22 +58,10 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
       multiline = false,
       rows = 3,
       sx = {},
+      icon,
     },
     ref
   ) => {
-    useEffect(() => {
-      if (process.env.NODE_ENV !== 'production') {
-        if (value != null && !onChange) {
-          console.warn(
-            'You provided a `value` prop to a form field without an `onChange` handler. ' +
-            'This will render a read-only field. ' +
-            'If the field should be mutable use `defaultValue`. ' +
-            'Otherwise, set either `onChange` or `readOnly`.'
-          );
-        }
-      }
-    }, [value, onChange]);
-
     const baseStyles = css({
       display: "block",
       width: fullWidth ? "100%" : "auto",
@@ -93,13 +83,34 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
       ...sx,
     });
 
+    const inputWrapperStyles = css({
+      position: "relative",
+      display: "inline-block",
+      width: fullWidth ? "100%" : "auto",
+    });
+
+    const iconStyles = css({
+      position: "absolute",
+      top: "50%",
+      transform: "translateY(-50%)",
+      left: "12px",
+      color: "#6B7280",
+    });
+
+    const inputStyles = css([
+      baseStyles,
+      icon ? { paddingLeft: "36px" } : {}
+    ]);
+
     const inputProps = {
       type,
+      name,
       placeholder,
       disabled,
-      css: baseStyles,
-      ref,
-      ...(onChange ? { value, onChange } : { defaultValue: value ?? defaultValue }),
+      css: inputStyles,
+      value: value ?? '',
+      onChange,
+      defaultValue: !value ? defaultValue : undefined,
     };
 
     return (
@@ -116,18 +127,21 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
             {label}
           </label>
         )}
-        {multiline ? (
-          <textarea
-            {...inputProps}
-            rows={rows}
-            ref={ref as React.Ref<HTMLTextAreaElement>}
-          />
-        ) : (
-          <input
-            {...inputProps}
-            ref={ref as React.Ref<HTMLInputElement>}
-          />
-        )}
+        <div css={inputWrapperStyles}>
+          {icon && <span css={iconStyles}>{icon}</span>}
+          {multiline ? (
+            <textarea
+              {...inputProps}
+              rows={rows}
+              ref={ref as React.Ref<HTMLTextAreaElement>}
+            />
+          ) : (
+            <input
+              {...inputProps}
+              ref={ref as React.Ref<HTMLInputElement>}
+            />
+          )}
+        </div>
         {(error || success) && statusText && (
           <div
             css={{

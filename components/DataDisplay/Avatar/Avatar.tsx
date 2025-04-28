@@ -4,7 +4,7 @@ import { css, CSSObject } from "@emotion/react";
 import Image from "next/image";
 
 type AvatarProps = {
-  src?: { src: string };
+  src?: string;
   alt?: string;
   size?: "small" | "medium" | "large";
   variant?: "circular" | "rounded" | "square";
@@ -22,7 +22,7 @@ const Avatar: React.FC<AvatarProps> = ({
   ...props
 }) => {
   const sizes = {
-    small: 32,
+    small: 30,
     medium: 48,
     large: 64,
   };
@@ -30,6 +30,7 @@ const Avatar: React.FC<AvatarProps> = ({
   const avatarStyles = css`
     width: ${sizes[size]}px;
     height: ${sizes[size]}px;
+    position: relative;
     display: inline-flex;
     justify-content: center;
     align-items: center;
@@ -48,7 +49,7 @@ const Avatar: React.FC<AvatarProps> = ({
     <div css={avatarStyles} {...props}>
       {src ? (
         <Image
-          src={src.src}
+          src={src}
           alt={alt || "Avatar"}
           fill
           css={css`

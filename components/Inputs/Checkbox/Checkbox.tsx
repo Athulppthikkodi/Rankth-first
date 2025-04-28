@@ -18,8 +18,8 @@ const sizeStyles = {
     height: "16px",
   }),
   medium: css({
-    width: "20px",
-    height: "20px",
+    width: "21px",
+    height: "21px",
   }),
   large: css({
     width: "24px",

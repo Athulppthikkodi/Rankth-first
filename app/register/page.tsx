@@ -1,7 +1,7 @@
 "use client";
 import Stack from "@/components/Layout/Stack/Stack";
 import MainNavigation from "@/components/MainNavigation/MainNavigation";
-import React from "react";
+import React, { useState } from "react";
 import Input from "@/components/Inputs/Input/Input";
 import Button from "@/components/Inputs/Button/Button";
 import Typography from "@/components/DataDisplay/Typography/Typography";
@@ -12,13 +12,32 @@ import Logo from "@/components/DataDisplay/Logo/Logo";
 import bbdo from "@/public/bbdo.svg";
 import semrush from "@/public/semrush.svg";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { setRegisterData } from "@/store/slices/formSlice";
 
 const Page = () => {
+  const dispatch = useDispatch();
   const router = useRouter();
+  const [formData, setFormData] = useState({ email: "", password: "" });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const formDataObj = new FormData(e.currentTarget);
+    const email = formDataObj.get("email") as string;
+    const password = formDataObj.get("password") as string;
+
+    dispatch(setRegisterData({ email, password }));
     router.push("/name");
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   return (
@@ -26,12 +45,7 @@ const Page = () => {
       <MainNavigation items={[]} />
       <Box sx={{ padding: "72px 0 296px" }}>
         <Container>
-          <Grid
-            container
-            spacing={66}
-            cols={9}
-            size={{ md: { cols: 1 } }}
-          >
+          <Grid container spacing={66} cols={9} size={{ md: { cols: 1 } }}>
             <Grid
               sx={{
                 background: "#fff",
@@ -134,19 +148,25 @@ const Page = () => {
                   or
                 </Typography>
                 <Input
+                  name="email"
                   label="Email"
                   placeholder="m@example.com"
                   fullWidth
                   sx={{ marginBottom: "16px" }}
+                  value={formData.email}
+                  onChange={handleChange}
                 />
                 <Input
+                  name="password"
                   label="Password"
+                  type="password"
                   fullWidth
                   sx={{ marginBottom: "24px", fontSize: "14px" }}
+                  value={formData.password}
+                  onChange={handleChange}
                 />
                 <Button
                   type="submit"
-                  onClick={() => {}}
                   sx={{
                     width: "100%",
                     textTransform: "capitalize",

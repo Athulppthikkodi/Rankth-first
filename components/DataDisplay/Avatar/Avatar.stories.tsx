@@ -42,7 +42,7 @@ export const Default: Story = {
 // Avatar with Image
 export const WithImage: Story = {
   args: {
-    src: { src: "https://via.placeholder.com/150" },
+    src: "",
     alt: "User Avatar",
     size: "medium",
   },

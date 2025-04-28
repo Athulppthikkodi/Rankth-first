@@ -8,6 +8,10 @@ import {
   ColumnDef,
 } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
+import Checkbox from "@/components/Inputs/Checkbox/Checkbox";
+import AvatarGroup from "@/components/DataDisplay/AvatarGroup/AvatarGroup";
+import Avatar from "@/components/DataDisplay/Avatar/Avatar";
+import Chip from "@/components/DataDisplay/Chip/Chip";
 
 // Task type definition
 type Task = {
@@ -22,17 +26,48 @@ type Task = {
 
 // Sample Data
 const data: Task[] = [
-  { id: "1", name: "Add relevant structured data", assignees: ["S", "R", "R"], dueDate: "29 Sep, 2024", taskType: "Link Building", priority: "High", status: "In Progress" },
-  { id: "2", name: "Optimize for voice search", assignees: ["S", "R", "B"], dueDate: "29 Sep, 2024", taskType: "Link Building", priority: "High", status: "In Progress" },
-  { id: "3", name: "Track keyword rankings", assignees: ["V", "P", "R"], dueDate: "29 Sep, 2024", taskType: "Link Building", priority: "High", status: "In Progress" },
-  { id: "4", name: "Track keyword rankings", assignees: ["S", "R", "R"], dueDate: "29 Sep, 2024", taskType: "Link Building", priority: "High", status: "In Progress" },
+  {
+    id: "1",
+    name: "Add relevant structured data",
+    assignees: ["S", "R", "R"],
+    dueDate: "29 Sep, 2024",
+    taskType: "Link Building",
+    priority: "High",
+    status: "In Progress",
+  },
+  {
+    id: "2",
+    name: "Optimize for voice search",
+    assignees: ["S", "R", "B"],
+    dueDate: "29 Sep, 2024",
+    taskType: "Link Building",
+    priority: "High",
+    status: "In Progress",
+  },
+  {
+    id: "3",
+    name: "Track keyword rankings",
+    assignees: ["V", "P", "R"],
+    dueDate: "29 Sep, 2024",
+    taskType: "Link Building",
+    priority: "High",
+    status: "In Progress",
+  },
+  {
+    id: "4",
+    name: "Track keyword rankings",
+    assignees: ["S", "R", "R"],
+    dueDate: "29 Sep, 2024",
+    taskType: "Link Building",
+    priority: "High",
+    status: "In Progress",
+  },
 ];
 
 // Styled Components
 const TableContainer = styled.div`
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 `;
 
 const Table = styled.table`
@@ -41,67 +76,31 @@ const Table = styled.table`
 `;
 
 const Th = styled.th`
-  background: #f5f7fa;
+  background: #fff;
   text-align: left;
-  padding: 12px;
-  font-weight: 600;
-  color: #7a869a;
+  padding: 6px;
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 400;
+  color: #202020;
+  border-bottom: 1px solid #DBDBDB;
+
 `;
 
 const Td = styled.td`
-  padding: 12px;
-  border-bottom: 1px solid #eaeaea;
+  font-size: 13px;
+  font-weight: 400;
+  color: #202020;
+  padding: 6px;
+  line-height: 20px;
+  border-bottom: 1px solid #DBDBDB;
 `;
 
 const Row = styled.tr`
+  background:#fff;
   &:hover {
     background: #f9fafb;
   }
-`;
-
-const Checkbox = styled.input`
-  width: 16px;
-  height: 16px;
-  cursor: pointer;
-`;
-
-const AssigneeGroup = styled.div`
-  display: flex;
-  gap: 6px;
-`;
-
-const Assignee = styled.div`
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: #e0e4ea;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: 600;
-  color: #444;
-`;
-
-const TaskType = styled.a`
-  color: #2f80ed;
-  font-weight: 500;
-  cursor: pointer;
-  text-decoration: none;
-`;
-
-const PriorityLabel = styled.span<{ priority: "High" | "Medium" | "Low" }>`
-  padding: 4px 8px;
-  border-radius: 5px;
-  font-size: 12px;
-  font-weight: 500;
-  color: white;
-  background: ${({ priority }) =>
-    priority === "High"
-      ? "#F87171"
-      : priority === "Medium"
-      ? "#FBBF24"
-      : "#34D399"};
 `;
 
 const Status = styled.span`
@@ -122,8 +121,8 @@ const MoreButton = styled.button`
 const columns: ColumnDef<Task>[] = [
   {
     accessorKey: "select",
-    header: () => <Checkbox type="checkbox" />,
-    cell: () => <Checkbox type="checkbox" />,
+    header: () => <Checkbox size="medium" />,
+    cell: () => <Checkbox size="medium" />,
   },
   {
     accessorKey: "name",
@@ -133,11 +132,16 @@ const columns: ColumnDef<Task>[] = [
     accessorKey: "assignees",
     header: "Assignee",
     cell: ({ getValue }) => (
-      <AssigneeGroup>
+      <AvatarGroup max={3} spacing={-8}>
         {getValue<string[]>().map((initial, index) => (
-          <Assignee key={index}>{initial}</Assignee>
+          <Avatar 
+            key={index} 
+            size="small" 
+            fallback={initial}
+            sx={{ backgroundColor: "#e0e4ea", color: "#444", fontWeight: 600 }}
+          />
         ))}
-      </AssigneeGroup>
+      </AvatarGroup>
     ),
   },
   {
@@ -147,16 +151,17 @@ const columns: ColumnDef<Task>[] = [
   {
     accessorKey: "taskType",
     header: "Task Type",
-    cell: ({ getValue }) => <TaskType href="#">{getValue<string>()}</TaskType>,
+    cell: ({ getValue }) => (
+      <Chip type="link-building" text={getValue<string>()} />
+    ),
   },
   {
     accessorKey: "priority",
     header: "Priority",
-    cell: ({ getValue }) => (
-      <PriorityLabel priority={getValue<Task["priority"]>()}>
-        ● {getValue<Task["priority"]>()}
-      </PriorityLabel>
-    ),
+    cell: ({ getValue }) => {
+      const priority = getValue<Task["priority"]>();
+      return <Chip type={priority.toLowerCase() as "high" | "medium" | "low"} text={priority} />;
+    },
   },
   {
     accessorKey: "status",
@@ -189,7 +194,10 @@ const TaskTable: React.FC = () => {
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <Th key={header.id}>
-                  {flexRender(header.column.columnDef.header, header.getContext())}
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext()
+                  )}
                 </Th>
               ))}
             </tr>

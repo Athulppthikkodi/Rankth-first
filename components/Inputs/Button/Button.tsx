@@ -7,7 +7,7 @@ type ButtonProps = {
   size?: "small" | "medium" | "large";
   icon?: JSX.Element;
   children?: React.ReactNode;
-  onClick: () => void;
+  onClick?: () => void; // Made optional
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
   sx?: CSSObject; // Accepts plain style objects like MUI's `sx`

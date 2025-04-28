@@ -26,7 +26,7 @@ const AvatarGroup: React.FC<AvatarGroupProps> = ({
 
   const groupStyles = css`
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     ${sx && css(sx)};
   `;
 
@@ -48,8 +48,11 @@ const AvatarGroup: React.FC<AvatarGroupProps> = ({
           fallback={`+${extraCount}`}
           sx={{
             marginLeft: spacing,
-            backgroundColor: "#e4e4e7",
+            backgroundColor: "#172935",
             fontSize: 12,
+            fontWeight: "400",
+            color: "#FFFFFF",
+            border: "2px solid #fff"
           }}
         />
       )}
