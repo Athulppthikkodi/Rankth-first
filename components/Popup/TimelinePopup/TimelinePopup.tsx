@@ -1,4 +1,9 @@
 import React, { useState, useRef } from "react";
+import { useMutation } from "@apollo/client";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store";
+import { FormState } from "../../../store/slices/types";
+import { CREATE_PROJECT } from "../../../graphql/mutations/createProject";
 import Box from "../../Layout/Box/Box";
 import Typography from "../../DataDisplay/Typography/Typography";
 import Input from "../../Inputs/Input/Input";
@@ -9,6 +14,7 @@ interface TimelinePopupProps {
   handleClose: () => void;
   handleNextPopup: () => void;
   handleSkip: () => void;
+  // removed agencyId prop
 }
 
 const TimelinePopup: React.FC<TimelinePopupProps> = ({
@@ -16,8 +22,13 @@ const TimelinePopup: React.FC<TimelinePopupProps> = ({
   handleNextPopup,
   handleSkip,
 }) => {
+  const agencyId = useSelector((state: RootState) => state.form.agencyId);
+  const [projectName, setProjectName] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  const [error, setError] = useState("");
+
+  const [createProject, { loading, reset }] = useMutation(CREATE_PROJECT);
   const startDateRef = useRef<HTMLInputElement>(null);
   const endDateRef = useRef<HTMLInputElement>(null);
 
@@ -42,6 +53,45 @@ const TimelinePopup: React.FC<TimelinePopupProps> = ({
   ) => {
     if (event.target instanceof HTMLInputElement) {
       setEndDate(new Date(event.target.value));
+    }
+  };
+
+  const handleProjectNameChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setProjectName(event.target.value);
+    setError("");
+  };
+
+  const handleCreateProject = async () => {
+    if (!projectName.trim()) {
+      setError("Project name is required");
+      return;
+    }
+
+    if (!agencyId) {
+      setError("Please create an agency first");
+      return;
+    }
+
+    try {
+      const { data } = await createProject({
+        variables: {
+          input: {
+            name: projectName,
+            startDate: startDate.toISOString(),
+            endDate: endDate.toISOString(),
+            agencyId: agencyId,
+          },
+        },
+      });
+
+      if (data?.createProject) {
+        handleNextPopup();
+      }
+    } catch (err) {
+      setError("Failed to create project. Please try again.");
+      console.error("Project creation error:", err);
     }
   };
 
@@ -101,13 +151,23 @@ const TimelinePopup: React.FC<TimelinePopupProps> = ({
       <Typography variant="h3" component="h4" sx={{ marginBottom: "41px" }}>
         Project Settings
       </Typography>
-      <Input
-        label="Name your project"
-        placeholder="My First SEO Project"
-        fullWidth
-        size="large"
-        sx={{ marginBottom: "28px" }}
-      />
+      <Box sx={{ marginBottom: "28px" }}>
+        <Input
+          label="Name your project"
+          placeholder="My First SEO Project"
+          fullWidth
+          size="large"
+          value={projectName}
+          onChange={handleProjectNameChange}
+          error={error ? true : undefined}
+          sx={{ marginBottom: error ? "4px" : "0" }}
+        />
+        {error && (
+          <Typography color="error" sx={{ fontSize: "12px" }}>
+            {error}
+          </Typography>
+        )}
+      </Box>
       <Typography
         paragraph
         sx={{ marginBottom: "18px", fontSize: "14px", fontWeight: 700 }}
@@ -216,7 +276,7 @@ const TimelinePopup: React.FC<TimelinePopupProps> = ({
         size="medium"
         sx={{ marginBottom: "35px", fontSize: "14px", fontWeight: "700" }}
       />
-      
+
       <Box
         display="flex"
         sx={{
@@ -224,13 +284,19 @@ const TimelinePopup: React.FC<TimelinePopupProps> = ({
           maxWidth: "204px",
         }}
       >
-        <Button variant="contained" size="medium" onClick={handleNextPopup}>
-          Continue
+        <Button
+          variant="contained"
+          size="medium"
+          onClick={handleCreateProject}
+          disabled={loading}
+        >
+          {loading ? "Creating..." : "Continue"}
         </Button>
         <Button
           variant="ghost"
           size="medium"
           onClick={handleSkip}
+          disabled={loading}
           sx={{
             borderRadius: "6px",
             border: "1px solid rgba(0, 0, 0, 0.26)",

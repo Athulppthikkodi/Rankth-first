@@ -53,36 +53,39 @@ const Button: React.FC<ButtonProps> = ({
 
   const variantStyles = {
     contained: css`
-      background-color: #00BC74;
-      color: #fff;
+      background-color: var(--primary-500);
+      color: var(--primary-text-color);
       &:hover {
-        background-color: #1565c0;
+        background-color: var(--primary-600);
+      }
+        &:active {
+        background-color: var(--primary-700);
       }
       &:disabled {
-        background-color: #b0bec5;
+        background-color: var(--disabled);
         cursor: not-allowed;
       }
     `,
     outlined: css`
       background: transparent;
-      color: #1976d2;
-      border: 1px solid #D6D6D9;
+      color: var(--seconday-800);
+      border: 1px solid rgba(var(--secondary-800-rgb), 0.25);
       &:hover {
-        background: rgba(25, 118, 210, 0.1);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
       &:disabled {
-        color: #b0bec5;
-        border-color: #b0bec5;
+        color: rgba(var(--secondary-800-rgb), 0.50);
+        
       }
     `,
     ghost: css`
       background: transparent;
-      color: #1976d2;
+      color: rgba(var(--seconday-800), 0.55); 
       &:hover {
-        background: rgba(25, 118, 210, 0.1);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
       &:disabled {
-        color: #b0bec5;
+       color: rgba(var(--seconday-800), 0.50);
       }
     `,
   };

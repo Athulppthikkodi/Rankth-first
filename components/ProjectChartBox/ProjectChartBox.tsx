@@ -13,14 +13,16 @@ interface AvatarData {
 interface ProjectChartBoxProps {
   avatarCount: number;
   avatarData: AvatarData[];
+  projectName?: string;
+  handleNavigate: () => void;
 }
 
-export const ProjectChartBox: React.FC<ProjectChartBoxProps> = ({avatarCount, avatarData}) => {
+export const ProjectChartBox: React.FC<ProjectChartBoxProps> = ({avatarCount, avatarData,projectName, handleNavigate}) => {
   return (
-    <Box sx={{padding: "28px 28px 18px", background: "#fff" , maxWidth: "364px", borderRadius: "26px", border: "0.964px solid #DFE3EE"
-
+    <Box onClick={handleNavigate} sx={{padding: "28px 28px 18px", background: "#fff" , maxWidth: "364px", borderRadius: "26px", border: "0.964px solid #DFE3EE",
+     cursor: "pointer"
     }}>
-        <Typography variant='h5' sx={{fontSize: "16px" , paddingBottom: "13px"}}>Godrej Properties</Typography>
+        <Typography variant='h5' sx={{fontSize: "16px" , paddingBottom: "13px"}}>{projectName}</Typography>
         <DualMetricChart />
         <AvatarGroup max={avatarCount} spacing={-10} sx={{ marginTop: "13px" }}>
             {

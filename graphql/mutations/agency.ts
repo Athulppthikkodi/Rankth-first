@@ -6,6 +6,7 @@ export const CREATE_AGENCY = gql`
       id
       name
       website
+      
     }
   }
 `;

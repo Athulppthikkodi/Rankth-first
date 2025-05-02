@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import { useMutation } from '@apollo/client';
-import { CREATE_AGENCY } from '@/graphql/mutations/agency';
+import { useMutation } from "@apollo/client";
+import { CREATE_AGENCY } from "@/graphql/mutations/agency";
 import Box from "@/components/Layout/Box/Box";
 import MainNavigation from "@/components/MainNavigation/MainNavigation";
 import Typography from "@/components/DataDisplay/Typography/Typography";
@@ -11,32 +11,28 @@ import { Building2, User } from "lucide-react";
 import Input from "@/components/Inputs/Input/Input";
 import Button from "@/components/Inputs/Button/Button";
 import { useRouter } from "next/navigation";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import client from "@/lib/apolloclient";
+import { setAgencyId } from "@/store/slices/formSlice";
+import { FormState } from "@/store/slices/formSlice";
 
+export interface RootState {
+  form: FormState;
+}
 const Page = () => {
   const [activeTab, setActiveTab] = useState<"agency" | "myself">("agency");
   const [companyName, setCompanyName] = useState("");
   const [website, setWebsite] = useState("");
   const [error, setError] = useState({ company: "", website: "", general: "" });
   const router = useRouter();
-  const formState = useSelector((state: any) => state.form);
+  const formState = useSelector((state: RootState) => state.form);
+  const dispatch = useDispatch();
 
   const [createAgency] = useMutation(CREATE_AGENCY, {
     client, // Add Apollo client instance
   });
 
-  const validateWebsite = (url: string) => {
-    if (!url) return false;
-    try {
-      // Add http:// if not present
-      const urlToTest = url.startsWith('http') ? url : `https://${url}`;
-      new URL(urlToTest);
-      return true;
-    } catch {
-      return false;
-    }
-  };
+ 
 
   const handleNavigate = () => {
     router.push("/dashboardEmpty");
@@ -45,25 +41,25 @@ const Page = () => {
   const handleCreateAgency = async () => {
     try {
       setError({ company: "", website: "", general: "" });
-      console.log('FormState:', formState); // Add this to debug
+      console.log("FormState:", formState); // Add this to debug
       if (!formState.userId) {
-        setError(prev => ({ ...prev, general: "User ID is required" }));
+        setError((prev) => ({ ...prev, general: "User ID is required" }));
         return;
       }
 
       // Validation checks
       if (!companyName.trim()) {
-        setError(prev => ({ ...prev, company: "Company name is required" }));
+        setError((prev) => ({ ...prev, company: "Company name is required" }));
         return;
       }
 
       if (!website.trim()) {
-        setError(prev => ({ ...prev, website: "Website URL is required" }));
+        setError((prev) => ({ ...prev, website: "Website URL is required" }));
         return;
       }
 
-      const websiteUrl = website.trim().startsWith('http') 
-        ? website.trim() 
+      const websiteUrl = website.trim().startsWith("http")
+        ? website.trim()
         : `https://${website.trim()}`;
 
       const input = {
@@ -71,20 +67,21 @@ const Page = () => {
         website: websiteUrl,
         ownerId: formState.userId,
       };
-      
-      console.log('Mutation Input:', input); // Add this to debug
+
+      console.log("Mutation Input:", input); // Add this to debug
 
       const response = await createAgency({
-        variables: { input }
+        variables: { input },
       });
 
       if (response.data?.createAgency) {
+        dispatch(setAgencyId({ agencyId: response.data.createAgency.id }));
         router.push("/dashboardEmpty");
       }
     } catch (error: any) {
       const message = error.graphQLErrors?.[0]?.message || error.message;
-      setError(prev => ({ ...prev, general: message }));
-      console.error('Error creating agency:', error);
+      setError((prev) => ({ ...prev, general: message }));
+      console.error("Error creating agency:", error);
     }
   };
 
@@ -108,7 +105,7 @@ const Page = () => {
             <Box
               onClick={() => handleClick("agency")}
               sx={{
-               background:"#FFFFFF",
+                background: "#FFFFFF",
                 padding: "24px",
                 border:
                   activeTab === "agency"
@@ -180,7 +177,10 @@ const Page = () => {
           <Box sx={{ marginTop: "40px" }}>
             {activeTab === "agency" && (
               <Box>
-                <Typography paragraph sx={{ marginBottom: "50px", maxWidth: "588px"}}>
+                <Typography
+                  paragraph
+                  sx={{ marginBottom: "50px", maxWidth: "588px" }}
+                >
                   Lorem ipsum dolor sit amet consectetur adipisicing elit.
                   Laboriosam consequuntur, veniam provident, nam ad optio ea
                 </Typography>
@@ -188,17 +188,17 @@ const Page = () => {
                   Add Company Info
                 </Typography>
                 <Stack spacing={24}>
-                  <Input 
-                    label="Company Name" 
-                    sx={{ width: "438px" }} 
+                  <Input
+                    label="Company Name"
+                    sx={{ width: "438px" }}
                     value={companyName}
                     onChange={(e) => setCompanyName(e.target.value)}
                     error={error.company ? true : undefined}
                     statusText={error.company}
                   />
-                  <Input 
-                    label="Custom URL" 
-                    sx={{ width: "438px" }} 
+                  <Input
+                    label="Custom URL"
+                    sx={{ width: "438px" }}
                     value={website}
                     onChange={(e) => setWebsite(e.target.value)}
                     error={error.website ? true : undefined}

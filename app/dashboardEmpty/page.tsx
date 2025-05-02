@@ -11,14 +11,51 @@ import TimelinePopup from "@/components/Popup/TimelinePopup/TimelinePopup";
 import AddTeamPopup from "@/components/Popup/AddTeamPopup/AddTeamPopup";
 import ModePopup from "@/components/Popup/ModePopup/ModePopup";
 import { TentTree } from "lucide-react";
+import { GET_PROJECTS } from "@/graphql/query/projects";
+import { useQuery } from "@apollo/client";
+import { ProjectChartBox } from "@/components/ProjectChartBox/ProjectChartBox";
+import avatarIconOne from "@/public/avatar-icon-one.svg";
+import avatarIconTwo from "@/public/avatar-icon-two.svg";
+import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation";  
+import { FormState } from "@/store/slices/formSlice";
+interface Project {
+  name: string;
+  id: string;
+  status: string;
+}
+export interface RootState {
+  form: FormState;
+  // add other slices of your store here
+}
 
 const Page = () => {
   const [timelinePopup, setTimelinePopup] = useState(false);
   const [addTeamPopup, setAddTeamPopup] = useState(false);
   const [modePopup, setModePopup] = useState(false);
+  const agencyId = useSelector((state: RootState) => state.form.agencyId);
+  const router = useRouter();
+  const { data, loading, error, refetch } = useQuery(GET_PROJECTS,{
+    variables:{
+      agencyId: agencyId
+    }
+  });
+  const projects = data?.projects || [];
 
+  const avatarData = [
+    { name: "User 1", src: avatarIconOne },
+    { name: "User 2", src: avatarIconTwo },
+    { name: "User 2", src: avatarIconTwo },
+    { name: "User 2", src: avatarIconTwo },
+    { name: "User 2", src: avatarIconTwo },
+    { name: "User 2", src: avatarIconTwo },
+  ]
+  function handleNavigate() {
+    router.push("/phasePlanner");
+  }
   function handleTimelinePopupClose() {
     setTimelinePopup(false);
+    refetch();
   }
 
   function handleAddTeamPopupOpen() {
@@ -45,10 +82,12 @@ const Page = () => {
     setTimelinePopup(false);
     setAddTeamPopup(false);
     setModePopup(false);
+    refetch();
   }
 
+
   return (
-    <Box sx={{ background: "#F1F5F8", height: "100svh" }}>
+    <Box sx={{ background: "#F1F5F8", height: "100svh" }}>  
       <MainNavigation items={[]} />
       <Box>
         <Container>
@@ -59,51 +98,63 @@ const Page = () => {
           >
             Projects
           </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              paddingTop: "144px",
-            }}
-          >
+          {loading ? (
+            <Typography>Loading...</Typography>
+          ) : error ? (
+            <Typography color="error">Error loading projects</Typography>
+          ) : projects.length > 0 ? (
+            <Box sx={{padding: "20px 0"}}>
+              {projects.map((project: Project) => (
+             <ProjectChartBox avatarCount={3} avatarData={avatarData} projectName={project.name} key={project.id} handleNavigate={handleNavigate} />
+              ))}
+            </Box>
+          ) : (
             <Box
               sx={{
-                maxWidth: "364px",
                 display: "flex",
-                flexDirection: "column",
+                justifyContent: "center",
                 alignItems: "center",
+                paddingTop: "144px",
               }}
             >
-              <TentTree size={70} strokeWidth={0.5} />
-              <Typography
-                variant="h6"
-                component="h2"
+              <Box
                 sx={{
-                  textAlign: "center",
-                  paddingBottom: "13px",
-                  marginTop: "18px",
+                  maxWidth: "364px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
                 }}
               >
-                Relax! You have no projects
-              </Typography>
-              <Typography
-                paragraph
-                sx={{
-                  fontSize: "13px",
-                  paddingBottom: "18px",
-                  textAlign: "center",
-                }}
-              >
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos
-                blanditiis tenetur unde suscipit, quam beatae rerum inventore
-                consectetur, neque doloribus
-              </Typography>
-              <Button onClick={() => setTimelinePopup(true)}>
-                Add New Project
-              </Button>
+                <TentTree size={70} strokeWidth={0.5} />
+                <Typography
+                  variant="h6"
+                  component="h2"
+                  sx={{
+                    textAlign: "center",
+                    paddingBottom: "13px",
+                    marginTop: "18px",
+                  }}
+                >
+                  Relax! You have no projects
+                </Typography>
+                <Typography
+                  paragraph
+                  sx={{
+                    fontSize: "13px",
+                    paddingBottom: "18px",
+                    textAlign: "center",
+                  }}
+                >
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos
+                  blanditiis tenetur unde suscipit, quam beatae rerum inventore
+                  consectetur, neque doloribus
+                </Typography>
+                <Button onClick={() => setTimelinePopup(true)}>
+                  Add New Project
+                </Button>
+              </Box>
             </Box>
-          </Box>
+          )}
         </Container>
       </Box>
       <Navbar />

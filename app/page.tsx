@@ -7,11 +7,7 @@ import Typography from "@/components/DataDisplay/Typography/Typography";
 import Input from "@/components/Inputs/Input/Input";
 import Button from "@/components/Inputs/Button/Button";
 import { useRouter } from "next/navigation";
-import DualMetricChart from "@/components/chart/DualMetricChart/DualMetricChart";
-import { ProjectChartBox } from "@/components/ProjectChartBox/ProjectChartBox";
-import avatarIconOne from "@/public/avatar-icon-one.svg";
-import avatarIconTwo from "@/public/avatar-icon-two.svg";
-import Table from "@/components/Table/Table";
+
 const Page = () => {
   const navigationItems = [
     { label: "Phase Planner", to: "/phase-planner" },
@@ -33,14 +29,7 @@ const Page = () => {
     console.log("Analyse clicked");
     router.push("/register");
   };
-  const avatarData = [
-    { name: "User 1", src: avatarIconOne },
-    { name: "User 2", src: avatarIconTwo },
-    { name: "User 2", src: avatarIconTwo },
-    { name: "User 2", src: avatarIconTwo },
-    { name: "User 2", src: avatarIconTwo },
-    { name: "User 2", src: avatarIconTwo },
-  ]
+ 
   return (
     <>
       <MainNavigation
@@ -53,10 +42,9 @@ const Page = () => {
         // avatarSrc="https://example.com/avatar.jpg"
         
       />
-      <Table/>
+     
       
       <Box sx={{ background: "#F1F5F8", padding: "70px 0 207px" }}>
-      <ProjectChartBox avatarCount={3} avatarData={avatarData}/>
         <Box>
           <Container maxWidth="lg">
             <Typography variant="h1" sx={{ paddingBottom: "59px" }}>
@@ -83,7 +71,7 @@ const Page = () => {
               />
               <Button
                 onClick={handleAnalyse}
-                sx={{ background: "#00BC74", textTransform: "capitalize" }}
+                sx={{ textTransform: "capitalize" }}
               >
                 Analyse
               </Button>

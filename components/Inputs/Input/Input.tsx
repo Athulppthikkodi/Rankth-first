@@ -108,9 +108,10 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
       placeholder,
       disabled,
       css: inputStyles,
-      value: value ?? '',
-      onChange,
-      defaultValue: !value ? defaultValue : undefined,
+      ...(onChange
+        ? { value: value ?? '', onChange }
+        : { defaultValue: value ?? defaultValue }
+      ),
     };
 
     return (

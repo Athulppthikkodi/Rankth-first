@@ -35,7 +35,7 @@ const avatars = [
 const Template: StoryFn<typeof AvatarGroup> = (args) => (
   <AvatarGroup {...args}>
     {avatars.map((avatar, index) => (
-      <Avatar key={index} src={{ src: avatar.src }} alt={avatar.alt} size="medium" />
+      <Avatar key={index} src={avatar.src} alt={avatar.alt} size="medium" />
     ))}
   </AvatarGroup>
 );
