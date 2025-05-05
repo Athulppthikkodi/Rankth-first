@@ -17,7 +17,7 @@ const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) 
 });
 
 const httpLink = createHttpLink({
-  uri: 'https://rankth.acodez.ca/query',
+  uri: 'https://apitester.acodez.ca/query',
   credentials: 'include',
   headers: {
     'Content-Type': 'application/json',
