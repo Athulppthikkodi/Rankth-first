@@ -4,7 +4,7 @@ export async function POST(request: Request) {
   try {
     const body = await request.json()
 
-    const response = await fetch('https://rankth.acodez.ca/graphql', {
+    const response = await fetch('https://apitester.acodez.ca/graphql', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

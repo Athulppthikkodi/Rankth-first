@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, { ElementType } from "react";
+import React, { ElementType, forwardRef } from "react";
 import { css, CSSObject } from "@emotion/react";
 
 type BoxBaseProps = {
@@ -18,23 +18,26 @@ type BoxBaseProps = {
 }
 
 type BoxProps<T extends ElementType> = BoxBaseProps & 
-  Omit<React.ComponentPropsWithoutRef<T>, keyof BoxBaseProps>;
+  Omit<React.ComponentPropsWithRef<T>, keyof BoxBaseProps>;
 
-const Box = <T extends ElementType = "div">({
-  component,
-  display,
-  width,
-  height,
-  margin,
-  padding,
-  bgcolor,
-  border,
-  borderRadius,
-  boxShadow,
-  sx = {},
-  children,
-  ...props
-}: BoxProps<T>) => {
+const Box = forwardRef(<T extends ElementType = "div">(
+  {
+    component,
+    display,
+    width,
+    height,
+    margin,
+    padding,
+    bgcolor,
+    border,
+    borderRadius,
+    boxShadow,
+    sx = {},
+    children,
+    ...props
+  }: BoxProps<T>,
+  ref: React.ForwardedRef<Element>
+) => {
   const Component = component || "div";
   
   const baseStyles = css({
@@ -54,12 +57,15 @@ const Box = <T extends ElementType = "div">({
   return (
     <Component 
       css={[baseStyles, customStyles]} 
+      ref={ref}
       {...props}
     >
       {children}
     </Component>
   );
-};
+});
+
+Box.displayName = 'Box';
 
 export type { BoxProps };
 export default Box;

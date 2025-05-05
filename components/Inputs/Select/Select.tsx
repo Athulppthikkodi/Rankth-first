@@ -264,6 +264,7 @@ const Select: React.FC<SelectProps> = ({
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
+    fontSize: selectSize === "small" ? 13 : selectSize === "large" ? 16 : 14,
     "&:hover": {
       backgroundColor: "#f0f0f0",
     },

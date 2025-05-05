@@ -18,7 +18,7 @@ Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> & {
     size?: "small" | "medium" | "large";
     multiline?: boolean;
     rows?: number;
-    sx?: React.CSSProperties;
+    sx?: any; // Change from React.CSSProperties to any to allow Emotion CSS properties
     ref?: React.RefObject<HTMLInputElement | null>;
     icon?: React.ReactNode;
   };
@@ -62,25 +62,66 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
     },
     ref
   ) => {
-    const baseStyles = css({
+    const baseStyles = {
       display: "block",
       width: fullWidth ? "100%" : "auto",
       border: error ? "2px solid red" : success ? "2px solid green" : "1px solid #ccc",
       borderRadius: "6px",
       outline: "none",
       transition: "border-color 0.2s ease-in-out",
+      "&::-webkit-calendar-picker-indicator": {
+        cursor: "pointer"
+      },
+      "&[type='date']": {
+        "&::-webkit-datetime-edit": {
+          color: "transparent",
+        },
+        "&::-webkit-datetime-edit-fields-wrapper": {
+          color: "transparent",
+        },
+        "&::-webkit-datetime-edit-text": {
+          color: "transparent",
+        },
+        "&::-webkit-datetime-edit-month-field": {
+          color: "transparent",
+        },
+        "&::-webkit-datetime-edit-day-field": {
+          color: "transparent",
+        },
+        "&::-webkit-datetime-edit-year-field": {
+          color: "transparent",
+        },
+        "&:not([value])": {
+          color: "transparent",
+        },
+        "&::-webkit-calendar-picker-indicator": {
+          opacity: 0,
+          position: "absolute",
+          right: 0,
+          top: 0,
+          width: "100%",
+          height: "100%",
+          cursor: "pointer",
+        },
+      },
       "::focus": {
         borderColor: error ? "red" : success ? "green" : "#1976d2",
         borderWidth: "1px",
       },
       "::placeholder": {
-        color: "#37415199", fontWeight: 400,},
+        color: "#37415199", 
+        fontWeight: 400,
+      },
       "::disabled": {
         backgroundColor: "#f5f5f5",
         cursor: "not-allowed",
       },
       ...sizeStyles[size],
-      ...sx,
+    };
+
+    const mergedStyles = css({
+      ...baseStyles,
+      ...sx
     });
 
     const inputWrapperStyles = css({
@@ -95,19 +136,17 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
       transform: "translateY(-50%)",
       left: "12px",
       color: "#6B7280",
+      zIndex: 1, // Add zIndex to ensure icon stays above input
     });
 
-    const inputStyles = css([
-      baseStyles,
-      icon ? { paddingLeft: "36px" } : {}
-    ]);
+    const inputStyles = icon ? { paddingLeft: "36px !important" } : {};
 
     const inputProps = {
       type,
       name,
       placeholder,
       disabled,
-      css: inputStyles,
+      css: [mergedStyles, inputStyles], // Merge as an array to maintain specificity
       ...(onChange
         ? { value: value ?? '', onChange }
         : { defaultValue: value ?? defaultValue }
